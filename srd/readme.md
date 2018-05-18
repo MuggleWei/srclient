@@ -5,3 +5,6 @@
 ```
 go get github.com/hashicorp/consul/api
 ```
+
+## Example
+Note: remember to change ip address in shell script files
