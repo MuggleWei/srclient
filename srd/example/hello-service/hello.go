@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -10,6 +11,13 @@ import (
 
 	srd "github.com/MuggleWei/go-toy/srd"
 )
+
+const (
+	ServiceStatus_Pass           = 1
+	ServiceStatus_ReadyToOffline = 2
+)
+
+var serviceStatus = ServiceStatus_Pass
 
 func init() {
 	log.SetOutput(os.Stdout)
@@ -31,13 +39,18 @@ func main() {
 		panic(err)
 	}
 	registration := srd.ServiceRegistration{
-		ID:    *ptrServiceID,
-		Name:  *ptrServiceName,
-		Addr:  *ptrIp,
-		Port:  *ptrPort,
-		Tag:   []string{*ptrServiceTag},
-		TTL:   time.Second * 3,
-		Check: func() (bool, error) { return true, nil },
+		ID:   *ptrServiceID,
+		Name: *ptrServiceName,
+		Addr: *ptrIp,
+		Port: *ptrPort,
+		Tag:  []string{*ptrServiceTag},
+		TTL:  time.Second * 3,
+		Check: func() (bool, error) {
+			if serviceStatus == ServiceStatus_Pass {
+				return true, nil
+			}
+			return false, errors.New("ready to offline")
+		},
 	}
 	err = serviceDiscoveryClient.Register(&registration)
 	if err != nil {
@@ -47,6 +60,10 @@ func main() {
 	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
 		rsp := "hello, this is " + *ptrServiceID
 		fmt.Fprint(w, rsp)
+	})
+
+	http.HandleFunc("/offline", func(w http.ResponseWriter, r *http.Request) {
+		serviceStatus = ServiceStatus_ReadyToOffline
 	})
 
 	http.ListenAndServe(fmt.Sprintf("%s:%d", registration.Addr, registration.Port), nil)
