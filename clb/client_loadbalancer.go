@@ -28,7 +28,7 @@ func (this *ClientLoadBalancer) GetService(service string) (string, error) {
 	if nav == nil {
 		newNav, err := this.newServiceNav(service)
 		if err != nil {
-			return "", nil
+			return "", err
 		}
 		nav = newNav
 	}
