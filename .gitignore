@@ -1,0 +1,8 @@
+# golang
+go.sum
+
+# vim
+*~
+*.swp
+
+nohup.out
