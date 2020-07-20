@@ -9,7 +9,7 @@ import (
 	srd "github.com/MuggleWei/go-toy/srd"
 )
 
-var consulAddr = "172.17.0.16:8500"
+var consulAddr = "127.0.0.1:8500"
 var service = "hello-service"
 
 func TestNav(t *testing.T) {
