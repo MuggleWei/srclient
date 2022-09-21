@@ -1,10 +1,5 @@
-# SRD: client for service register and discovery
-[中文](readme_cn.md)
+# SRD: 服务注册与发现的客户端库
+[English](readme.md)
 
-## Prerequisite
-```
-go get github.com/hashicorp/consul/api
-```
-
-## Example
-Note: remember to change ip address in shell script files
+## 例子
+注意: 根据自己的需求，修改各个shell文件中的ip地址
