@@ -1,4 +1,4 @@
-package client_loadbalancer
+package clb
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	srd "github.com/MuggleWei/go-toy/srd"
+	srd "github.com/MuggleWei/srclient/srd"
 )
 
 var consulAddr = "127.0.0.1:8500"

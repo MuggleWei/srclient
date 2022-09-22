@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 
-	srd "github.com/MuggleWei/go-toy/srd"
+	srd "github.com/MuggleWei/srclient/srd"
 )
 
 type ReqWatch struct {

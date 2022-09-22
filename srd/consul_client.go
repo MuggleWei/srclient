@@ -1,4 +1,4 @@
-package service_discovery
+package srd
 
 import (
 	"fmt"
@@ -68,7 +68,7 @@ func (this *ConsulClient) Register(registration *ServiceRegistration) error {
 		Port:    registration.Port,
 		Tags:    registration.Tag,
 		Check: &consul.AgentServiceCheck{
-			TTL: registration.TTL.String(),
+			TTL:                            registration.TTL.String(),
 			DeregisterCriticalServiceAfter: registration.TTL.String(),
 		},
 	}
@@ -90,7 +90,7 @@ func (this *ConsulClient) DeRegister(string) error {
 	return nil
 }
 
-///////////////////// self function /////////////////////
+// /////////////////// self function /////////////////////
 func (this *ConsulClient) UpdateTTL(check func() (bool, error)) {
 	if check == nil {
 		check = func() (bool, error) {

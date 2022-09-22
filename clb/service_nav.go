@@ -1,4 +1,4 @@
-package client_loadbalancer
+package clb
 
 import (
 	"log"
@@ -7,7 +7,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	srd "github.com/MuggleWei/go-toy/srd"
+	srd "github.com/MuggleWei/srclient/srd"
 )
 
 type ServiceNavigation struct {

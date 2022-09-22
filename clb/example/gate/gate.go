@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	clb "github.com/MuggleWei/go-toy/clb"
-	srd "github.com/MuggleWei/go-toy/srd"
+	clb "github.com/MuggleWei/srclient/clb"
+	srd "github.com/MuggleWei/srclient/srd"
 )
 
 var transport *http.Transport

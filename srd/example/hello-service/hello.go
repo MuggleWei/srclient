@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	srd "github.com/MuggleWei/go-toy/srd"
+	srd "github.com/MuggleWei/srclient/srd"
 )
 
 const (

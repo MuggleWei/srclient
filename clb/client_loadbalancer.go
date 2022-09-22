@@ -1,10 +1,10 @@
-package client_loadbalancer
+package clb
 
 import (
 	"sync"
 	"time"
 
-	srd "github.com/MuggleWei/go-toy/srd"
+	srd "github.com/MuggleWei/srclient/srd"
 )
 
 type ClientLoadBalancer struct {
