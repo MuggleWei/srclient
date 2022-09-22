@@ -3,9 +3,17 @@ services:
   consul:
     image: "consul:1.13.1"
     restart: always
-    network_mode: host
+    ports:
+      - "8500:8500"
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
     volumes:
-      - ./data:/consul/data
+      - ./docker_volume/data:/consul/data
     environment:
       - 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}'
-    command: "agent -server -bind=127.0.0.1 -client=127.0.0.1 -ui -bootstrap-expect=1 -node=agent-0 -enable-script-checks=true"
+    command: "agent -server -bind=0.0.0.0 -client=0.0.0.0 -ui -bootstrap-expect=1 -node=agent-0 -enable-script-checks=true"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "512m"
+        max-file: 3

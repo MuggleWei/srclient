@@ -4,4 +4,4 @@
 
 nohup.out
 
-/consul/data/
+docker_volume/
