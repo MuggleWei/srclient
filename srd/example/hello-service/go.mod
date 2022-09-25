@@ -4,7 +4,7 @@ go 1.19
 
 replace github.com/MuggleWei/srclient/srd => ../../../srd
 
-require github.com/MuggleWei/srclient/srd v0.0.1
+require github.com/MuggleWei/srclient/srd v0.0.2
 
 require (
 	github.com/armon/go-metrics v0.3.10 // indirect
