@@ -14,6 +14,7 @@ type ConsulClient struct {
 	ConsulAgent  *consul.Agent
 	ConsulHealth *consul.Health
 	TTL          time.Duration
+	AgentReg     *consul.AgentServiceRegistration
 }
 
 // NewConsul returns a Client interface for given consul address
@@ -61,7 +62,7 @@ func (this *ConsulClient) GetService(service, tag string) ([]*ServiceEntry, erro
 }
 
 func (this *ConsulClient) Register(registration *ServiceRegistration) error {
-	reg := &consul.AgentServiceRegistration{
+	this.AgentReg = &consul.AgentServiceRegistration{
 		ID:      registration.ID,
 		Name:    registration.Name,
 		Address: registration.Addr,
@@ -73,7 +74,7 @@ func (this *ConsulClient) Register(registration *ServiceRegistration) error {
 		},
 	}
 
-	err := this.ConsulAgent.ServiceRegister(reg)
+	err := this.ConsulAgent.ServiceRegister(this.AgentReg)
 	if err != nil {
 		return err
 	}
@@ -97,23 +98,39 @@ func (this *ConsulClient) UpdateTTL(check func() (bool, error)) {
 			return true, nil
 		}
 	}
+
 	ticker := time.NewTicker(this.TTL / 3)
+	var err error
 	for range ticker.C {
-		this.update(check)
+		if err == nil {
+			err = this.update(check)
+			if err != nil {
+				log.Printf("ttl update failed: %v\n", err)
+			}
+		} else {
+			err = this.ConsulAgent.ServiceRegister(this.AgentReg)
+			if err != nil {
+				log.Printf("try register failed: %v\n", err)
+			} else {
+				log.Printf("success re-register\n")
+			}
+		}
 	}
 }
 
-func (this *ConsulClient) update(check func() (bool, error)) {
+func (this *ConsulClient) update(check func() (bool, error)) error {
 	ok, err := check()
+
+	var agentErr error
 	if !ok {
-		agentErr := this.ConsulAgent.FailTTL("service:"+this.ID, err.Error())
-		if agentErr != nil {
-			log.Print(agentErr)
-		}
+		agentErr = this.ConsulAgent.FailTTL("service:"+this.ID, err.Error())
 	} else {
-		agentErr := this.ConsulAgent.PassTTL("service:"+this.ID, "")
-		if agentErr != nil {
-			log.Print(agentErr)
-		}
+		agentErr = this.ConsulAgent.PassTTL("service:"+this.ID, "")
 	}
+
+	if agentErr != nil {
+		log.Printf("consul client send ttl failed: %v", agentErr)
+	}
+
+	return agentErr
 }
